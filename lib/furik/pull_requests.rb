@@ -2,9 +2,10 @@ require 'octokit'
 
 module Furik
   class PullRequests
-    def initialize(client)
+    def initialize(client, owner = nil)
       @client = client
       @login = client.login
+      @owner = owner
     end
 
     def request_manager
@@ -24,10 +25,12 @@ module Furik
 
     def all!
       @all = all_repo_names.each.with_object([]) do |repo_name, memo|
-        pulls = pull_requests(repo_name)
-        memo.concat pulls if pulls.is_a?(Array)
-        request_manager
-      end
+        if @owner.nil? || repo_name.match(/#{@owner}\/.*/)
+          pulls = pull_requests(repo_name)
+          memo.concat pulls if pulls.is_a?(Array)
+          request_manager
+        end
+     end
     end
 
     def org_name_from(repo_name)

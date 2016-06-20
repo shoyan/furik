@@ -8,6 +8,7 @@ module Furik
     method_option :ghe, type: :boolean, aliases: '-l'
     method_option :start_date, type: :string, aliases: '-s'
     method_option :end_date, type: :string, aliases: '-e'
+    method_option :owner, type: :string, aliases: '-o'
     def pulls
       start_date = Date.parse(options[:start_date]) if options[:start_date]
       end_date = Date.parse(options[:end_date]) if options[:end_date]
@@ -16,7 +17,7 @@ module Furik
       puts '-'
       puts ''
 
-      Furik.pull_requests(gh: options[:gh], ghe: options[:ghe]) do |repo, issues|
+      Furik.pull_requests(gh: options[:gh], ghe: options[:ghe], owner: options[:owner]) do |repo, issues|
         if issues && !issues.empty?
           string_issues = issues.each.with_object('') do |issue, memo|
             date = issue.created_at.localtime.to_date

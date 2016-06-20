@@ -31,16 +31,16 @@ module Furik
       events
     end
 
-    def pull_requests(gh: true, ghe: true, &block)
+    def pull_requests(gh: true, ghe: true, owner: nil, &block)
       pulls = []
 
       if gh
-        gh_pulls = PullRequests.new(gh_client).all(&block)
+        gh_pulls = PullRequests.new(gh_client, owner).all(&block)
         pulls.concat gh_pulls if gh_pulls.is_a?(Array)
       end
 
       if ghe
-        ghe_pulls = PullRequests.new(ghe_client).all(&block)
+        ghe_pulls = PullRequests.new(ghe_client, owner).all(&block)
         pulls.concat ghe_pulls if ghe_pulls.is_a?(Array)
       end
 
